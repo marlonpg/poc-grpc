@@ -1,10 +1,13 @@
 package com.gambasoftware.poc.grpc.client;
 
-import com.gambadeveloper.poc.grpc.Data;
-import com.gambadeveloper.poc.grpc.User;
-import com.gambadeveloper.poc.grpc.UserServiceGrpc;
+import com.gambasoftware.poc.grpc.Data;
+import com.gambasoftware.poc.grpc.Request;
+import com.gambasoftware.poc.grpc.User;
+import com.gambasoftware.poc.grpc.UserServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+
+import java.util.Iterator;
 
 public class UserClient {
     public static void main(String[] args) {
@@ -12,6 +15,13 @@ public class UserClient {
                 .usePlaintext()
                 .build();
 
+        //createUser(channel);
+
+        getUsers(channel);
+        channel.shutdown();
+    }
+
+    public static void createUser(ManagedChannel channel) {
         UserServiceGrpc.UserServiceBlockingStub stub
                 = UserServiceGrpc.newBlockingStub(channel);
 
@@ -21,6 +31,18 @@ public class UserClient {
                 .build());
 
         System.out.println(response);
-        channel.shutdown();
+    }
+
+
+    public static void getUsers(ManagedChannel channel) {
+        UserServiceGrpc.UserServiceBlockingStub stub
+                = UserServiceGrpc.newBlockingStub(channel);
+
+        Iterator usersIt = stub.getUsersByCreationDate(Request.newBuilder()
+                .setDate("2023-09-28").build());
+
+        while (usersIt.hasNext()) {
+            System.out.println(usersIt.next());
+        }
     }
 }

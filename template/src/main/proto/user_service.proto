@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.gambadeveloper.poc.grpc";
+option java_package = "com.gambasoftware.poc.grpc";
 option java_outer_classname = "UserServiceProto";
 option objc_class_prefix = "US";
 
@@ -12,6 +12,7 @@ service UserService {
   // A simple RPC.
   rpc CreateUser(Data) returns (User) {}
 
+  rpc GetUsersByCreationDate(Request) returns (stream User) {}
 }
 
 message Data {
@@ -23,4 +24,9 @@ message User {
   string id = 1;
   string name = 2;
   string email = 3;
+  string createdAt = 4;
+}
+
+message Request {
+  string Date = 1;
 }
